@@ -1,4 +1,4 @@
-//package com.example.demo.auth.config;
+//package com.example.demo.server.config;
 //
 //import org.springframework.boot.autoconfigure.security.SecurityProperties;
 //import org.springframework.context.annotation.Configuration;
