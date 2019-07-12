@@ -22,7 +22,7 @@ public class ClientApplication {
     @RequestMapping
     public String index() {
         return "<center>" +
-                    "<h1>Hello Client1!</h1>" +
+                    "<h1>Hello OAuth Client!</h1>" +
                 "</center>";
     }
 

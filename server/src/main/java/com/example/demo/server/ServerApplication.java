@@ -24,7 +24,7 @@ public class ServerApplication {
     @RequestMapping
     public String index() {
         return "<center>" +
-                "<h1>Hello World!</h1>" +
+                "<h1>Hello OAuth Server!</h1>" +
                 "<br>" +
                 "<h2>Login in <a href='/github'>Github</a>.</h2>" +
                 "<h2>Login in <a href='/custom'>Custom</a>.</h2>" +
