@@ -19,14 +19,14 @@ public class ClientApplication {
         SpringApplication.run(ClientApplication.class, args);
     }
 
-    @RequestMapping
+    @RequestMapping("/")
     public String index() {
         return "<center>" +
-                    "<h1>Hello OAuth Client!</h1>" +
+                "<h1>Hello OAuth Client!</h1>" +
                 "</center>";
     }
 
-    @GetMapping("/user/me")
+    @GetMapping("/userinfo")
     public Principal userInfo(Principal principal) {
         return principal;
     }

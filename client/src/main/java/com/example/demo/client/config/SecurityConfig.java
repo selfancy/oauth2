@@ -3,7 +3,12 @@ package com.example.demo.client.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
@@ -13,16 +18,26 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
 /**
  * Created by mike on 2019/7/9
  */
 @Configuration
-public class CustomConfig {
+public class SecurityConfig {
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public UserDetailsService userDetailsService(PasswordEncoder passwordEncoder) {
+        UserDetails userDetails = User.withUsername("user")
+                .password(passwordEncoder.encode("666666"))
+                .roles("USER")
+                .build();
+        return new InMemoryUserDetailsManager(userDetails);
     }
 
     @Configuration
@@ -43,12 +58,11 @@ public class CustomConfig {
         @Override
         public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
             clients.inMemory()
-                    .withClient("custom_client_id")
+                    .withClient("client_id")
                     .secret(passwordEncoder.encode("$2a$10$JknlOkbQANofGnc9BRkLv.Kuixt/pZleX2VC54udsy5Gqry7iSFzK"))
-                    .authorizedGrantTypes("authorization_code")
-                    .scopes("user_info")
+                    .scopes("userinfo")
                     .autoApprove(true)
-                    .redirectUris("http://www.oauth.com/login/oauth2/code/custom")
+                    .redirectUris("http://www.oauth.com/login/oauth2/code/client")
                     .authorizedGrantTypes("authorization_code", "implicit", "refresh_token", "client_credentials");
         }
     }
@@ -69,13 +83,24 @@ public class CustomConfig {
                     .authorizeRequests()
                     .anyRequest().authenticated()
                     .and()
-                    .formLogin()
-                    .and()
-                    .httpBasic();
+                    .formLogin().and().httpBasic();
 
             //需要的时候创建session，支持从session中获取认证信息，ResourceServerConfiguration中
             //session创建策略是stateless不使用，这里其覆盖配置可创建session
             http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED);
+        }
+    }
+
+    @EnableWebSecurity
+    static class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+
+        @Override
+        protected void configure(HttpSecurity http) throws Exception {
+            http
+                    .authorizeRequests()
+                    .anyRequest().authenticated()
+                    .and()
+                    .formLogin();
         }
     }
 }
