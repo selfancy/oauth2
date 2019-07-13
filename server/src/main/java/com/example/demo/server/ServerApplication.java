@@ -24,8 +24,9 @@ public class ServerApplication {
                 "<h1>Hello OAuth Server!</h1>" +
                 "<br>" +
                 "<h2><a href='/github'>Github</a></h2>" +
-                "<h2><a href='/client' target='_blank'>Custom Client</a></h2>" +
+                "<h2><a href='/client' target='_blank'>OAuth Client</a></h2>" +
                 "<h2><a href='/userinfo' target='_blank'>Authorized User</a></h2>" +
+                "<h2><a href='/logout' target='_blank'>logout</a></h2>" +
                 "</center>";
     }
 
