@@ -1,4 +1,4 @@
-package com.example.demo.client.config;
+package com.example.oauth2.client.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

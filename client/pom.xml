@@ -10,6 +10,13 @@
     </parent>
     <artifactId>client</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+    </dependencies>
+
     <build>
         <plugins>
             <plugin>
@@ -18,7 +25,7 @@
                 <executions>
                     <execution>
                         <configuration>
-                            <mainClass>com.example.demo.client.ClientApplication</mainClass>
+                            <mainClass>com.example.oauth2.client.ClientApplication</mainClass>
                         </configuration>
                         <goals>
                             <goal>repackage</goal>
