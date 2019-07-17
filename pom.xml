@@ -75,10 +75,8 @@
     </repositories>
 
     <modules>
-        <module>server</module>
-        <module>client</module>
-        <module>gateway</module>
-        <module>client-webflux</module>
+        <module>web</module>
+        <module>webflux</module>
     </modules>
 
 </project>

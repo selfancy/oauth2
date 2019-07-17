@@ -1,0 +1,6 @@
+server:
+  port: 8001
+
+logging:
+  level:
+    org.springframework.security: debug
