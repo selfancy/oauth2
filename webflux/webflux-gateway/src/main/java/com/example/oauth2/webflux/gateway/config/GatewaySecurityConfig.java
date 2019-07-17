@@ -13,7 +13,7 @@ public class GatewaySecurityConfig {
 
     @Bean
     SecurityWebFilterChain webFluxSecurityFilterChain(ServerHttpSecurity http) throws Exception {
-        http.authorizeExchange().pathMatchers("/monitor/**").hasRole("ADMIN")
+        http.authorizeExchange().pathMatchers("/api/**").hasRole("DEVELOPER")
                 .anyExchange().permitAll().and().cors().and()
                 .httpBasic().and()
                 .csrf().disable();
