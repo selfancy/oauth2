@@ -62,8 +62,9 @@ public class SecurityConfig {
                     .secret(passwordEncoder.encode("$2a$10$JknlOkbQANofGnc9BRkLv.Kuixt/pZleX2VC54udsy5Gqry7iSFzK"))
                     .scopes("userinfo")
                     .autoApprove(true)
-                    .redirectUris("http://www.oauth.com:8000/login/oauth2/code/client")
-                    .authorizedGrantTypes("authorization_code", "implicit", "refresh_token", "client_credentials");
+                    .authorizedGrantTypes("authorization_code", "implicit", "refresh_token", "client_credentials")
+                    .redirectUris("http://www.oauth.com:8000/login/oauth2/code/client",
+                            "http://www.oauth.com:8000/login/oauth2/code/github");
         }
     }
 
@@ -74,7 +75,7 @@ public class SecurityConfig {
         public void configure(ResourceServerSecurityConfigurer resources) {
             //此处是关键，默认stateless=true，只支持access_token形式，
             // OAuth2客户端连接需要使用session，所以需要设置成false以支持session授权
-            resources.stateless(true);
+            resources.stateless(false);
         }
 
         @Override
@@ -89,7 +90,7 @@ public class SecurityConfig {
 
             //需要的时候创建session，支持从session中获取认证信息，ResourceServerConfiguration中
             //session创建策略是stateless不使用，这里其覆盖配置可创建session
-//            http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED);
+            http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED);
         }
     }
 
