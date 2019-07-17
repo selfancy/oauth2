@@ -1,5 +1,5 @@
 server:
-  port: 80
+  port: 8000
 
 
 spring:
@@ -23,9 +23,9 @@ spring:
             scope: read:user,repo
         provider:
           custom-provider:
-            token-uri: http://www.client.com:8080/oauth/token
-            authorization-uri: http://www.client.com:8080/oauth/authorize
-            user-info-uri: http://www.client.com:8080/userinfo
+            token-uri: http://www.client.com:8010/oauth/token
+            authorization-uri: http://www.client.com:8010/oauth/authorize
+            user-info-uri: http://www.client.com:8010/userinfo
             user-name-attribute: name
 logging:
   level:

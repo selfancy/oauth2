@@ -62,7 +62,7 @@ public class SecurityConfig {
                     .secret(passwordEncoder.encode("$2a$10$JknlOkbQANofGnc9BRkLv.Kuixt/pZleX2VC54udsy5Gqry7iSFzK"))
                     .scopes("userinfo")
                     .autoApprove(true)
-                    .redirectUris("http://www.oauth.com/login/oauth2/code/client")
+                    .redirectUris("http://www.oauth.com:8000/login/oauth2/code/client")
                     .authorizedGrantTypes("authorization_code", "implicit", "refresh_token", "client_credentials");
         }
     }
