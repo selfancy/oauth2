@@ -35,7 +35,7 @@ public class SecurityConfig {
     public UserDetailsService userDetailsService(PasswordEncoder passwordEncoder) {
         UserDetails userDetails = User.withUsername("user")
                 .password(passwordEncoder.encode("666666"))
-                .roles("USER", "ADMIN")
+                .roles("USER", "ADMIN", "CLIENT")
                 .build();
         return new InMemoryUserDetailsManager(userDetails);
     }
@@ -64,7 +64,9 @@ public class SecurityConfig {
                     .autoApprove(true)
                     .authorizedGrantTypes("authorization_code", "implicit", "refresh_token", "client_credentials")
                     .redirectUris("http://www.oauth.com:8000/login/oauth2/code/client",
-                            "http://www.oauth.com:8000/login/oauth2/code/github");
+                            "http://www.oauth.com:8000/login/oauth2/code/github",
+                            "http://www.oauth.com:9000/login/oauth2/code/client",
+                            "http://www.oauth.com:9000/login/oauth2/code/github");
         }
     }
 
