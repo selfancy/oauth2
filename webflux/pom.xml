@@ -21,6 +21,7 @@
     <modules>
         <module>webflux-gateway</module>
         <module>webflux-client</module>
+        <module>webflux-server</module>
     </modules>
 
 </project>
