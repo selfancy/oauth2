@@ -31,13 +31,14 @@ public class ServerSecurityConfig {
     @Bean
     SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
         http
+                .httpBasic().disable()
+                .formLogin().disable()
+                .csrf().disable()
                 .authorizeExchange()
 //                .pathMatchers("/userinfo").hasAuthority("USER")
 //                .pathMatchers("/resource").hasAuthority("SCOPE_resource.read")
                 .anyExchange().authenticated().and()
-                .oauth2Login()
-                .and()
-                .oauth2Client();
+                .oauth2Login();
         return http.build();
     }
 

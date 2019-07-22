@@ -10,7 +10,7 @@ spring:
             client-id: client_id
             client-secret: $2a$10$JknlOkbQANofGnc9BRkLv.Kuixt/pZleX2VC54udsy5Gqry7iSFzK
             client-name: Custom Resource Client
-            scope: userinfo
+            scope: userinfo,resource
             provider: custom-provider
             authorization-grant-type: authorization_code
             client-authentication-method: basic
@@ -22,9 +22,9 @@ spring:
             scope: read:user,repo
         provider:
           custom-provider:
-            token-uri: http://www.client.com:9010/oauth/token
-            authorization-uri: http://www.client.com:9010/oauth/authorize
-            user-info-uri: http://www.client.com:9010/userinfo
+            token-uri: http://www.client.com:8010/oauth/token
+            authorization-uri: http://www.client.com:8010/oauth/authorize
+            user-info-uri: http://www.client.com:8010/userinfo
             user-name-attribute: name
 
 logging:
