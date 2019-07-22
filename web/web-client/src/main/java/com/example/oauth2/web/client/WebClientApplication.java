@@ -37,4 +37,11 @@ public class WebClientApplication {
                 "<h1>Hello Admin!</h1>" +
                 "</center>";
     }
+
+    @RequestMapping("/dba")
+    public String dba() {
+        return "<center>" +
+                "<h1>Hello Dba!</h1>" +
+                "</center>";
+    }
 }

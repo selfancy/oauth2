@@ -34,7 +34,7 @@ public class SecurityConfig {
     @Bean
     public UserDetailsService userDetailsService(PasswordEncoder passwordEncoder) {
         UserDetails userDetails = User.withUsername("user")
-                .password(passwordEncoder.encode("666666"))
+                .password(passwordEncoder.encode("000"))
                 .roles("USER", "ADMIN", "CLIENT")
                 .build();
         return new InMemoryUserDetailsManager(userDetails);
@@ -63,10 +63,10 @@ public class SecurityConfig {
                     .scopes("userinfo")
                     .autoApprove(true)
                     .authorizedGrantTypes("authorization_code", "implicit", "refresh_token", "client_credentials")
-                    .redirectUris("http://www.oauth.com:8000/login/oauth2/code/client",
-                            "http://www.oauth.com:8000/login/oauth2/code/github",
-                            "http://www.oauth.com:9000/login/oauth2/code/client",
-                            "http://www.oauth.com:9000/login/oauth2/code/github");
+                    .redirectUris("http://www.server.com:8000/login/oauth2/code/client",
+                            "http://www.server.com:8000/login/oauth2/code/github",
+                            "http://www.server.com:9020/login/oauth2/code/client",
+                            "http://www.server.com:9020/login/oauth2/code/github");
         }
     }
 
@@ -99,13 +99,5 @@ public class SecurityConfig {
     @EnableWebSecurity
     static class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-        @Override
-        protected void configure(HttpSecurity http) throws Exception {
-            http
-                    .authorizeRequests()
-                    .anyRequest().authenticated()
-                    .and()
-                    .formLogin();
-        }
     }
 }

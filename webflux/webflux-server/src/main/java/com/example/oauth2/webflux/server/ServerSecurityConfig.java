@@ -29,20 +29,15 @@ import java.util.Map;
 public class ServerSecurityConfig {
 
     @Bean
-    public ReactiveUserDetailsService reactiveUserDetailsService() {
-        UserDetails user1 = User.withDefaultPasswordEncoder().username("mike").password("000").roles("USER").authorities("openid").build();
-        UserDetails user2 = User.withDefaultPasswordEncoder().username("user").password("000").authorities("openid", "SCOPE_resource.read").build();
-        return new MapReactiveUserDetailsService(user1, user2);
-    }
-
-    @Bean
     SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
         http
                 .authorizeExchange()
-                .pathMatchers("/userinfo").hasAuthority("USER")
-                .pathMatchers("/resource").hasAuthority("SCOPE_resource.read")
+//                .pathMatchers("/userinfo").hasAuthority("USER")
+//                .pathMatchers("/resource").hasAuthority("SCOPE_resource.read")
                 .anyExchange().authenticated().and()
-                .httpBasic().and().formLogin();
+                .oauth2Login()
+                .and()
+                .oauth2Client();
         return http.build();
     }
 
