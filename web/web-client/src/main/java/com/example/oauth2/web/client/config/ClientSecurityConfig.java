@@ -104,9 +104,9 @@ public class ClientSecurityConfig {
                             new OrRequestMatcher(new RequestHeaderRequestMatcher("Authorization"),
                                     request -> request.getParameter("access_token") != null))
                     .authorizeRequests()
-                    .antMatchers("/userinfo").permitAll()
                     .antMatchers("/admin").hasRole("ADMIN")
-                    .antMatchers("/dba").hasRole("DBA")
+                    .antMatchers("/userinfo").access("#oauth2.hasScope('userinfo')")
+                    .antMatchers("/resource").access("#oauth2.hasScope('resource')")
                     .anyRequest().fullyAuthenticated();
         }
     }

@@ -38,10 +38,10 @@ public class WebClientApplication {
                 "</center>";
     }
 
-    @RequestMapping("/dba")
+    @RequestMapping("/resource")
     public String dba() {
         return "<center>" +
-                "<h1>Hello Dba!</h1>" +
+                "<h1>Hello Resource!</h1>" +
                 "</center>";
     }
 }
