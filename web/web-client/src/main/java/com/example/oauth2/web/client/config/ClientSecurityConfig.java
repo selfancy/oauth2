@@ -11,7 +11,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.client.test.OAuth2ContextConfiguration;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
@@ -20,12 +19,14 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.R
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.web.util.matcher.OrRequestMatcher;
+import org.springframework.security.web.util.matcher.RequestHeaderRequestMatcher;
 
 /**
  * Created by mike on 2019/7/9
  */
 @Configuration
-public class SecurityConfig {
+public class ClientSecurityConfig {
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
@@ -61,14 +62,13 @@ public class SecurityConfig {
 
         @Override
         public void configure(AuthorizationServerSecurityConfigurer oauthServer) {
-            oauthServer.realm("oauth2-resource");
             oauthServer.tokenKeyAccess("permitAll()")
                     .checkTokenAccess("isAuthenticated()")
                     .allowFormAuthenticationForClients();
         }
 
         @Override
-        public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
+        public void configure(AuthorizationServerEndpointsConfigurer endpoints) {
             endpoints.authenticationManager(authenticationManager)
                     .userDetailsService(userDetailsService);
         }
@@ -88,7 +88,8 @@ public class SecurityConfig {
                             "http://www.server.com:8000/login/oauth2/code/github",
                             "http://www.server.com:9020/login/oauth2/code/client",
                             "http://www.server.com:9020/login/oauth2/code/github",
-                            "https://www.taobao.com");
+                            "https://www.taobao.com",
+                            "https://www.jd.com");
         }
     }
 
@@ -99,14 +100,17 @@ public class SecurityConfig {
         @Override
         public void configure(HttpSecurity http) throws Exception {
             http.sessionManagement().disable()
+                    .requestMatcher(
+                            new OrRequestMatcher(new RequestHeaderRequestMatcher("Authorization"),
+                                    request -> request.getParameter("access_token") != null))
                     .authorizeRequests()
-                    .antMatchers("/admin").hasAuthority("SCOPE_resource")
+                    .antMatchers("/userinfo").permitAll()
+                    .antMatchers("/admin").hasRole("ADMIN")
                     .antMatchers("/dba").hasRole("DBA")
-                    .anyRequest().authenticated();
+                    .anyRequest().fullyAuthenticated();
         }
     }
 
-    @OAuth2ContextConfiguration
     @EnableWebSecurity
     static class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
@@ -116,27 +120,4 @@ public class SecurityConfig {
             return super.authenticationManagerBean();
         }
     }
-//
-//    @Bean
-//    public TokenStore tokenStore() {
-//        return new InMemoryTokenStore();
-//    }
-//
-//    /**
-//     * 授权服务器令牌服务
-//     */
-//    @Bean
-//    public AuthorizationServerTokenServices authorizationServerTokenServices(
-//            TokenStore tokenStore, ClientDetailsService clientDetailsService,
-//            ObjectProvider<TokenEnhancer> tokenEnhancer) {
-//        DefaultTokenServices tokenService = new DefaultTokenServices();
-//        tokenService.setTokenStore(tokenStore);
-//        tokenService.setSupportRefreshToken(true);
-//        tokenService.setClientDetailsService(clientDetailsService);
-//        tokenService.setTokenEnhancer(tokenEnhancer.getIfAvailable());
-//        tokenService.setAccessTokenValiditySeconds((int) TimeUnit.MINUTES.toSeconds(30));
-//        tokenService.setRefreshTokenValiditySeconds((int) TimeUnit.MINUTES.toSeconds(60));
-//        tokenService.setReuseRefreshToken(false);
-//        return tokenService;
-//    }
 }
