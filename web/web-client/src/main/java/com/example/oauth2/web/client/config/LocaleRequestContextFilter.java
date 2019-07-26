@@ -5,7 +5,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.filter.OncePerRequestFilter;
-import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -15,12 +14,6 @@ import java.io.IOException;
 
 @Component
 public class LocaleRequestContextFilter extends OncePerRequestFilter {
-
-    private final LocaleChangeInterceptor localeChangeInterceptor;
-
-    public LocaleRequestContextFilter(LocaleChangeInterceptor localeChangeInterceptor) {
-        this.localeChangeInterceptor = localeChangeInterceptor;
-    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException, ServletException {

@@ -33,6 +33,6 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
         response.setStatus(HttpServletResponse.SC_FORBIDDEN);
 
         objectMapper.writeValue(response.getOutputStream(),
-                Response.fail("unauthorized", SecurityExceptionUtil.getMessage(e, request, response)));
+                Response.fail("unauthorized", SecurityExceptionUtil.getMessage(e)));
     }
 }

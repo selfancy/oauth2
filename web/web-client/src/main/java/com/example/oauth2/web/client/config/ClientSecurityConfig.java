@@ -7,6 +7,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -23,8 +24,6 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Res
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.access.AccessDeniedHandler;
-import org.springframework.security.web.util.matcher.OrRequestMatcher;
-import org.springframework.security.web.util.matcher.RequestHeaderRequestMatcher;
 
 /**
  * Created by mike on 2019/7/9
@@ -76,7 +75,6 @@ public class ClientSecurityConfig {
             endpoints.authenticationManager(authenticationManager)
                     // password模式支持
                     .userDetailsService(userDetailsService)
-                    // oauth2登录异常转换
                     .exceptionTranslator(new CustomDefaultWebResponseExceptionTranslator());
         }
 
@@ -125,12 +123,10 @@ public class ClientSecurityConfig {
 
         @Override
         public void configure(HttpSecurity http) throws Exception {
-            http.sessionManagement().disable()
-                    .requestMatcher(    //匹配请求头带Authorization参数，或者带query参数access_token
-                            new OrRequestMatcher(new RequestHeaderRequestMatcher("Authorization"),
-                                    request -> request.getParameter("access_token") != null))
+            http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED).and()
+                    // 跨域访问
+                    .cors().and()
                     .authorizeRequests()
-                    // 客户端
                     .antMatchers("/admin").hasRole("ADMIN")
                     // 客户端授权资源认证
                     .antMatchers("/userinfo").access("#oauth2.hasScope('userinfo')")

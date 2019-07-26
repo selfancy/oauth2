@@ -4,6 +4,8 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
@@ -27,6 +29,13 @@ public class LocaleUtil {
                       @Lazy LocaleResolver localeResolver) {
         LocaleUtil.localeChangeInterceptor = localeChangeInterceptor;
         LocaleUtil.localeResolver = localeResolver;
+    }
+
+    public static Locale resolveLocale() {
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+        HttpServletRequest request = attributes.getRequest();
+        HttpServletResponse response = attributes.getResponse();
+        return resolveLocale(request, response);
     }
 
     public static Locale resolveLocale(HttpServletRequest request, HttpServletResponse response) {

@@ -9,6 +9,7 @@ import org.springframework.security.authentication.*;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.oauth2.client.http.AccessTokenRequiredException;
+import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
 import org.springframework.security.oauth2.common.exceptions.UnapprovedClientAuthenticationException;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedCredentialsNotFoundException;
@@ -18,6 +19,7 @@ import org.springframework.security.web.authentication.rememberme.RememberMeAuth
 import org.springframework.security.web.authentication.session.SessionAuthenticationException;
 import org.springframework.security.web.authentication.www.NonceExpiredException;
 import org.springframework.stereotype.Component;
+import org.springframework.web.util.HtmlUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -36,11 +38,8 @@ public class SecurityExceptionUtil implements MessageSourceAware {
         SecurityExceptionUtil.messageSource = messageSource;
     }
 
-    public static String getMessage(AuthenticationException e, HttpServletRequest request, HttpServletResponse response) {
-        return getMessage(e, LocaleUtil.resolveLocale(request, response));
-    }
-
-    public static String getMessage(AuthenticationException e, Locale locale) {
+    public static String getMessage(AuthenticationException e) {
+        Locale locale = LocaleUtil.resolveLocale();
         String errorMessage = e.getMessage();
         // 权限认证不足异常
         if (e instanceof InsufficientAuthenticationException) {
@@ -114,8 +113,18 @@ public class SecurityExceptionUtil implements MessageSourceAware {
         return errorMessage;
     }
 
-    public static String getMessage(AccessDeniedException e, HttpServletRequest request, HttpServletResponse response) {
-        Locale locale = LocaleUtil.resolveLocale(request, response);
+    public static String getMessage(AccessDeniedException e) {
+        Locale locale = LocaleUtil.resolveLocale();
         return messageSource.getMessage("SecurityExceptionUtil.accessDenied", null, e.getMessage(), locale);
+    }
+
+    public static String getMessage(OAuth2Exception e) {
+        Locale locale = LocaleUtil.resolveLocale();
+        String resourceKey = OAuth2Exception.class.getSimpleName() + '.' + e.getOAuth2ErrorCode();
+        String errorMessage = e.getMessage();
+        if (errorMessage != null) {
+            errorMessage = HtmlUtils.htmlEscape(errorMessage);
+        }
+        return messageSource.getMessage(resourceKey, null, errorMessage, locale);
     }
 }
