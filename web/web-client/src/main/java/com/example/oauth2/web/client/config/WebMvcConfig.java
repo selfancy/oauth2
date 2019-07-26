@@ -8,7 +8,6 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import org.springframework.web.servlet.handler.SimpleUrlHandlerMapping;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 
@@ -56,11 +55,4 @@ public class WebMvcConfig implements WebMvcConfigurer {
         factoryBean.setValidationMessageSource(messageSource);
         return factoryBean;
     }
-
-//    @Bean
-//    public SimpleUrlHandlerMapping localeChangeHandlerMapping() {
-//        SimpleUrlHandlerMapping handlerMapping = new SimpleUrlHandlerMapping();
-//        handlerMapping.setInterceptors(localeChangeInterceptor());
-//        return handlerMapping;
-//    }
 }
