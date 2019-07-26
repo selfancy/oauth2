@@ -1,4 +1,4 @@
-package com.example.demo.server.config;
+package com.example.oauth2.web.server.config;
 
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.context.annotation.Bean;

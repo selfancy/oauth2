@@ -7,7 +7,7 @@ spring:
       client:
         registration:
           client:
-            client-id: client_id
+            client-id: client_1
             client-secret: $2a$10$JknlOkbQANofGnc9BRkLv.Kuixt/pZleX2VC54udsy5Gqry7iSFzK
             client-name: Custom Resource Client
             scope: userinfo,resource

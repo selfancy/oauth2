@@ -131,7 +131,8 @@ public class ClientSecurityConfig {
                     // 客户端授权资源认证
                     .antMatchers("/userinfo").access("#oauth2.hasScope('userinfo')")
                     .antMatchers("/resource").access("#oauth2.hasScope('resource')")
-                    .anyRequest().fullyAuthenticated();
+                    .anyRequest().fullyAuthenticated().and()
+                    .formLogin().and().httpBasic();
         }
     }
 
