@@ -1,22 +1,16 @@
 package com.example.oauth2.web.client.entity;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 /**
  * Created by mike on 2019-07-23
  */
 public class Response<T> {
 
-    @JsonProperty
     private boolean success;
 
-    @JsonProperty
     private String errorCode;
 
-    @JsonProperty
     private String message;
 
-    @JsonProperty
     private T data;
 
     public Response() {
