@@ -1,12 +1,16 @@
 package com.example.oauth2.web.client;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.security.Principal;
+import java.util.Locale;
 
 /**
  * Created by mike on 2019/7/12
@@ -43,5 +47,13 @@ public class WebClientApplication {
         return "<center>" +
                 "<h1>Hello Resource!</h1>" +
                 "</center>";
+    }
+
+    @Autowired
+    private MessageSource messageSource;
+
+    @RequestMapping("/i18n")
+    public String i18n(String lang) {
+        return messageSource.getMessage("SecurityExceptionUtil.badCredentials", null, LocaleContextHolder.getLocale());
     }
 }

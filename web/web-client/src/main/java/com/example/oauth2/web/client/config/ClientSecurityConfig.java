@@ -1,5 +1,6 @@
 package com.example.oauth2.web.client.config;
 
+import com.example.oauth2.web.client.custom.CustomDefaultWebResponseExceptionTranslator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -18,7 +19,10 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
+import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.util.matcher.OrRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestHeaderRequestMatcher;
 
@@ -70,7 +74,10 @@ public class ClientSecurityConfig {
         @Override
         public void configure(AuthorizationServerEndpointsConfigurer endpoints) {
             endpoints.authenticationManager(authenticationManager)
-                    .userDetailsService(userDetailsService);
+                    // password模式支持
+                    .userDetailsService(userDetailsService)
+                    // oauth2登录异常转换
+                    .exceptionTranslator(new CustomDefaultWebResponseExceptionTranslator());
         }
 
         @Override
@@ -97,14 +104,35 @@ public class ClientSecurityConfig {
     @EnableResourceServer
     static class CustomResourceServer extends ResourceServerConfigurerAdapter {
 
+        private final AccessDeniedHandler accessDeniedHandler;
+
+        private final AuthenticationEntryPoint authenticationEntryPoint;
+
+        public CustomResourceServer(AccessDeniedHandler accessDeniedHandler,
+                                    AuthenticationEntryPoint authenticationEntryPoint) {
+            this.accessDeniedHandler = accessDeniedHandler;
+            this.authenticationEntryPoint = authenticationEntryPoint;
+        }
+
+        @Override
+        public void configure(ResourceServerSecurityConfigurer resources) {
+            resources.resourceId("oauth2-resource")
+                    //自定义Token异常信息,用于token校验失败返回信息
+                    .authenticationEntryPoint(authenticationEntryPoint)
+                    //授权异常处理
+                    .accessDeniedHandler(accessDeniedHandler);
+        }
+
         @Override
         public void configure(HttpSecurity http) throws Exception {
             http.sessionManagement().disable()
-                    .requestMatcher(
+                    .requestMatcher(    //匹配请求头带Authorization参数，或者带query参数access_token
                             new OrRequestMatcher(new RequestHeaderRequestMatcher("Authorization"),
                                     request -> request.getParameter("access_token") != null))
                     .authorizeRequests()
+                    // 客户端
                     .antMatchers("/admin").hasRole("ADMIN")
+                    // 客户端授权资源认证
                     .antMatchers("/userinfo").access("#oauth2.hasScope('userinfo')")
                     .antMatchers("/resource").access("#oauth2.hasScope('resource')")
                     .anyRequest().fullyAuthenticated();
@@ -114,10 +142,30 @@ public class ClientSecurityConfig {
     @EnableWebSecurity
     static class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
+        private final AccessDeniedHandler accessDeniedHandler;
+
+        private final AuthenticationEntryPoint authenticationEntryPoint;
+
+        public WebSecurityConfig(AccessDeniedHandler accessDeniedHandler,
+                                 AuthenticationEntryPoint authenticationEntryPoint) {
+            this.accessDeniedHandler = accessDeniedHandler;
+            this.authenticationEntryPoint = authenticationEntryPoint;
+        }
+
         @Bean
         @Override
         public AuthenticationManager authenticationManagerBean() throws Exception {
             return super.authenticationManagerBean();
         }
+
+        @Override
+        protected void configure(HttpSecurity http) throws Exception {
+            super.configure(http);
+            http
+                    .exceptionHandling()
+                    .accessDeniedHandler(accessDeniedHandler)
+                    .authenticationEntryPoint(authenticationEntryPoint);
+        }
+
     }
 }
