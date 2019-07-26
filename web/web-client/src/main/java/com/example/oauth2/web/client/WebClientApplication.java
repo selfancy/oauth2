@@ -53,7 +53,7 @@ public class WebClientApplication {
     private MessageSource messageSource;
 
     @RequestMapping("/i18n")
-    public String i18n(String lang) {
+    public String i18n() {
         return messageSource.getMessage("SecurityExceptionUtil.badCredentials", null, LocaleContextHolder.getLocale());
     }
 }
