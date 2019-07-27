@@ -86,7 +86,7 @@ public class ClientSecurityConfig {
                     .withClient("client_1")
                     .secret(encoder.encode("$2a$10$JknlOkbQANofGnc9BRkLv.Kuixt/pZleX2VC54udsy5Gqry7iSFzK"))
                     .scopes("userinfo", "resource")
-                    .resourceIds("oauth2-resource")
+                    .resourceIds("web-resource", "api-resource")
                     .autoApprove(true)
                     .accessTokenValiditySeconds(1200)
                     .refreshTokenValiditySeconds(50000)
@@ -107,8 +107,9 @@ public class ClientSecurityConfig {
 
         private final AuthenticationEntryPoint authenticationEntryPoint;
 
-        public CustomWebResourceServer(AccessDeniedHandler accessDeniedHandler,
-                                    AuthenticationEntryPoint authenticationEntryPoint) {
+        public CustomWebResourceServer(
+                AccessDeniedHandler accessDeniedHandler,
+                AuthenticationEntryPoint authenticationEntryPoint) {
             this.accessDeniedHandler = accessDeniedHandler;
             this.authenticationEntryPoint = authenticationEntryPoint;
         }
@@ -148,8 +149,9 @@ public class ClientSecurityConfig {
 
         private final AuthenticationEntryPoint authenticationEntryPoint;
 
-        public CustomApiResourceServer(AccessDeniedHandler accessDeniedHandler,
-                                       AuthenticationEntryPoint authenticationEntryPoint) {
+        public CustomApiResourceServer(
+                AccessDeniedHandler accessDeniedHandler,
+                AuthenticationEntryPoint authenticationEntryPoint) {
             this.accessDeniedHandler = accessDeniedHandler;
             this.authenticationEntryPoint = authenticationEntryPoint;
         }
@@ -175,37 +177,19 @@ public class ClientSecurityConfig {
                     .authorizeRequests()
                     // 客户端api授权资源认证
                     .antMatchers("/userinfo").access("#oauth2.hasScope('userinfo')")
-                    .anyRequest().fullyAuthenticated();
+                    .anyRequest().fullyAuthenticated().and()
+                    .formLogin().and()
+                    .httpBasic();
         }
     }
 
     @EnableWebSecurity
     static class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-        private final AccessDeniedHandler accessDeniedHandler;
-
-        private final AuthenticationEntryPoint authenticationEntryPoint;
-
-        public WebSecurityConfig(AccessDeniedHandler accessDeniedHandler,
-                                 AuthenticationEntryPoint authenticationEntryPoint) {
-            this.accessDeniedHandler = accessDeniedHandler;
-            this.authenticationEntryPoint = authenticationEntryPoint;
-        }
-
         @Bean
         @Override
         public AuthenticationManager authenticationManagerBean() throws Exception {
             return super.authenticationManagerBean();
         }
-
-        @Override
-        protected void configure(HttpSecurity http) throws Exception {
-            super.configure(http);
-            http
-                    .exceptionHandling()
-                    .accessDeniedHandler(accessDeniedHandler)
-                    .authenticationEntryPoint(authenticationEntryPoint);
-        }
-
     }
 }
