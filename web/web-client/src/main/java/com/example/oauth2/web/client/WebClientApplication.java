@@ -43,7 +43,7 @@ public class WebClientApplication {
     }
 
     @RequestMapping("/resource")
-    public String dba() {
+    public String resource() {
         return "<center>" +
                 "<h1>Hello Resource!</h1>" +
                 "</center>";

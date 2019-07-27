@@ -29,6 +29,7 @@ import org.springframework.security.web.access.AccessDeniedHandler;
  * Created by mike on 2019/7/9
  */
 @Configuration
+@EnableResourceServer
 public class ClientSecurityConfig {
 
     @Bean
@@ -41,6 +42,7 @@ public class ClientSecurityConfig {
         UserDetails userDetails = User.withUsername("user")
                 .password(passwordEncoder.encode("000"))
                 .roles("USER", "ADMIN", "CLIENT")
+                .authorities("resource")
                 .build();
         return new InMemoryUserDetailsManager(userDetails);
     }
@@ -99,14 +101,13 @@ public class ClientSecurityConfig {
     }
 
     @Configuration
-    @EnableResourceServer
-    static class CustomResourceServer extends ResourceServerConfigurerAdapter {
+    static class CustomWebResourceServer extends ResourceServerConfigurerAdapter {
 
         private final AccessDeniedHandler accessDeniedHandler;
 
         private final AuthenticationEntryPoint authenticationEntryPoint;
 
-        public CustomResourceServer(AccessDeniedHandler accessDeniedHandler,
+        public CustomWebResourceServer(AccessDeniedHandler accessDeniedHandler,
                                     AuthenticationEntryPoint authenticationEntryPoint) {
             this.accessDeniedHandler = accessDeniedHandler;
             this.authenticationEntryPoint = authenticationEntryPoint;
@@ -114,7 +115,10 @@ public class ClientSecurityConfig {
 
         @Override
         public void configure(ResourceServerSecurityConfigurer resources) {
-            resources.resourceId("oauth2-resource").stateless(false)
+            resources.resourceId("web-resource")
+                    //有状态化,一次认证保存认证信息(适合web端)
+                    //无状态化,每次请求需要认证(适合rest api)
+                    .stateless(false)
                     //自定义Token异常信息,用于token校验失败返回信息
                     .authenticationEntryPoint(authenticationEntryPoint)
                     //授权异常处理
@@ -126,13 +130,52 @@ public class ClientSecurityConfig {
             http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED).and()
                     // 跨域访问
                     .cors().and()
+                    .anonymous().disable()
                     .authorizeRequests()
+                    // web资源认证
                     .antMatchers("/admin").hasRole("ADMIN")
-                    // 客户端授权资源认证
-                    .antMatchers("/userinfo").access("#oauth2.hasScope('userinfo')")
-                    .antMatchers("/resource").access("#oauth2.hasScope('resource')")
+                    .antMatchers("/resource").hasAuthority("resource")
                     .anyRequest().fullyAuthenticated().and()
-                    .formLogin().and().httpBasic();
+                    .formLogin().and()
+                    .httpBasic();
+        }
+    }
+
+    @Configuration
+    static class CustomApiResourceServer extends ResourceServerConfigurerAdapter {
+
+        private final AccessDeniedHandler accessDeniedHandler;
+
+        private final AuthenticationEntryPoint authenticationEntryPoint;
+
+        public CustomApiResourceServer(AccessDeniedHandler accessDeniedHandler,
+                                       AuthenticationEntryPoint authenticationEntryPoint) {
+            this.accessDeniedHandler = accessDeniedHandler;
+            this.authenticationEntryPoint = authenticationEntryPoint;
+        }
+
+        @Override
+        public void configure(ResourceServerSecurityConfigurer resources) {
+            resources.resourceId("api-resource")
+                    //有状态化,一次认证保存认证信息(适合web端)
+                    //无状态化,每次请求需要认证(适合rest api)
+                    .stateless(true)
+                    //自定义Token异常信息,用于token校验失败返回信息
+                    .authenticationEntryPoint(authenticationEntryPoint)
+                    //授权异常处理
+                    .accessDeniedHandler(accessDeniedHandler);
+        }
+
+        @Override
+        public void configure(HttpSecurity http) throws Exception {
+            http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED).and()
+                    // 跨域访问
+                    .cors().and()
+                    .anonymous().disable()
+                    .authorizeRequests()
+                    // 客户端api授权资源认证
+                    .antMatchers("/userinfo").access("#oauth2.hasScope('userinfo')")
+                    .anyRequest().fullyAuthenticated();
         }
     }
 
