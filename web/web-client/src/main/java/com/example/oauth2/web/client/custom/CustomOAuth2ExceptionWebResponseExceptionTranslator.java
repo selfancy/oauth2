@@ -8,7 +8,7 @@ import org.springframework.security.oauth2.provider.error.DefaultWebResponseExce
 /**
  * Created by mike on 2019-07-25
  */
-public class CustomDefaultWebResponseExceptionTranslator extends DefaultWebResponseExceptionTranslator {
+public class CustomOAuth2ExceptionWebResponseExceptionTranslator extends DefaultWebResponseExceptionTranslator {
 
     @Override
     public ResponseEntity<OAuth2Exception> translate(Exception e) throws Exception {

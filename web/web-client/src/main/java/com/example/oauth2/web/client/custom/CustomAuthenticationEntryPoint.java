@@ -4,9 +4,9 @@ import com.example.oauth2.web.client.entity.Response;
 import com.example.oauth2.web.client.i18n.SecurityExceptionUtil;
 import com.example.oauth2.web.client.util.WebUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.boot.autoconfigure.security.oauth2.client.OAuth2SsoProperties;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.oauth2.provider.error.OAuth2AuthenticationEntryPoint;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
@@ -18,7 +18,7 @@ import java.io.IOException;
 
 /**
  * 自定义Token异常信息,用于token校验失败返回信息
- *
+ * <p>
  * Created by mike on 2019-07-23
  */
 @Component
@@ -30,8 +30,11 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
 
     private final AuthenticationEntryPoint loginUrlAuthenticationEntryPoint = new LoginUrlAuthenticationEntryPoint(LOGIN_URL);
 
+    private final AuthenticationEntryPoint oAuth2AuthenticationEntryPoint = new OAuth2AuthenticationEntryPoint();
+
     public CustomAuthenticationEntryPoint(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
+        ((OAuth2AuthenticationEntryPoint) this.oAuth2AuthenticationEntryPoint).setExceptionTranslator(new CustomWebResponseExceptionTranslator());
     }
 
     @Override
@@ -44,7 +47,18 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
             objectMapper.writeValue(response.getOutputStream(),
                     Response.fail("unauthorized", errorMessage));
         } else {
-            loginUrlAuthenticationEntryPoint.commence(request, response, e);
+            if (isOAuth2Request(request)) {
+                oAuth2AuthenticationEntryPoint.commence(request, response, e);
+            } else {
+                loginUrlAuthenticationEntryPoint.commence(request, response, e);
+            }
         }
+    }
+
+    private boolean isOAuth2Request(HttpServletRequest request) {
+        String requestURI = request.getRequestURI();
+        return requestURI.startsWith("/oauth") ||
+                request.getParameter("access_token") != null ||
+                request.getHeader("Authorization") != null;
     }
 }

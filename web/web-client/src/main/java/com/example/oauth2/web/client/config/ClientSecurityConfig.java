@@ -1,6 +1,6 @@
 package com.example.oauth2.web.client.config;
 
-import com.example.oauth2.web.client.custom.CustomDefaultWebResponseExceptionTranslator;
+import com.example.oauth2.web.client.custom.CustomOAuth2ExceptionWebResponseExceptionTranslator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -75,7 +75,7 @@ public class ClientSecurityConfig {
             endpoints.authenticationManager(authenticationManager)
                     // password模式支持
                     .userDetailsService(userDetailsService)
-                    .exceptionTranslator(new CustomDefaultWebResponseExceptionTranslator());
+                    .exceptionTranslator(new CustomOAuth2ExceptionWebResponseExceptionTranslator());
         }
 
         @Override
@@ -114,7 +114,7 @@ public class ClientSecurityConfig {
 
         @Override
         public void configure(ResourceServerSecurityConfigurer resources) {
-            resources.resourceId("oauth2-resource")
+            resources.resourceId("oauth2-resource").stateless(false)
                     //自定义Token异常信息,用于token校验失败返回信息
                     .authenticationEntryPoint(authenticationEntryPoint)
                     //授权异常处理
