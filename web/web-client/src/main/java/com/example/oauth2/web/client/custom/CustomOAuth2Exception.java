@@ -9,13 +9,13 @@ import java.util.Map;
  * Created by mike on 2019-07-23
  */
 @JsonSerialize(using = CustomOAuth2ExceptionJackson2Serializer.class)
-public class CustomOAuth2Exception extends OAuth2Exception {
+class CustomOAuth2Exception extends OAuth2Exception {
 
-    public CustomOAuth2Exception(String msg) {
+    CustomOAuth2Exception(String msg) {
         super(msg);
     }
 
-    public static CustomOAuth2Exception from(OAuth2Exception origin) {
+    static CustomOAuth2Exception from(OAuth2Exception origin) {
         CustomOAuth2Exception ex = new CustomOAuth2Exception(origin.getMessage()) {
             @Override
             public String getOAuth2ErrorCode() {

@@ -1,31 +1,22 @@
 package com.example.oauth2.web.client.i18n;
 
 import com.example.oauth2.web.client.config.LocaleUtil;
+import com.example.oauth2.web.client.entity.Response;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.context.MessageSource;
 import org.springframework.context.MessageSourceAware;
-import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.authentication.*;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.oauth2.client.http.AccessTokenRequiredException;
 import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
-import org.springframework.security.oauth2.common.exceptions.UnapprovedClientAuthenticationException;
-import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
-import org.springframework.security.web.authentication.preauth.PreAuthenticatedCredentialsNotFoundException;
-import org.springframework.security.web.authentication.rememberme.CookieTheftException;
-import org.springframework.security.web.authentication.rememberme.InvalidCookieException;
-import org.springframework.security.web.authentication.rememberme.RememberMeAuthenticationException;
-import org.springframework.security.web.authentication.session.SessionAuthenticationException;
-import org.springframework.security.web.authentication.www.NonceExpiredException;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.web.util.HtmlUtils;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.Locale;
 
 /**
+ * 异常处理
+ *
  * Created by mike on 2019-07-25
  */
 @Component
@@ -38,93 +29,35 @@ public class SecurityExceptionUtil implements MessageSourceAware {
         SecurityExceptionUtil.messageSource = messageSource;
     }
 
-    public static String getMessage(AuthenticationException e) {
+    public static Response<String> getErrorResponse(Throwable e) {
         Locale locale = LocaleUtil.resolveLocale();
-        String errorMessage = e.getMessage();
-        // 权限认证不足异常
-        if (e instanceof InsufficientAuthenticationException) {
-            if (e instanceof AccessTokenRequiredException) {
-                errorMessage = messageSource.getMessage("SecurityExceptionUtil.accessTokenRequired", null, locale);
-            } else if (e instanceof UnapprovedClientAuthenticationException) {
-                errorMessage = messageSource.getMessage("SecurityExceptionUtil.unapprovedClientAuthentication", null, locale);
-            } else {
-                errorMessage = messageSource.getMessage("SecurityExceptionUtil.insufficientAuthentication", null, locale);
+        Throwable rootCause = ExceptionUtils.getRootCause(e);
+        String errorCode = "fail";
+        String errorMessage = rootCause.getMessage();
+        if (rootCause instanceof OAuth2Exception) {
+            OAuth2Exception oAuth2Exception = (OAuth2Exception) rootCause;
+            String resourceKey = OAuth2Exception.class.getSimpleName() + '.' + oAuth2Exception.getOAuth2ErrorCode();
+            if (errorMessage != null) {
+                errorMessage = HtmlUtils.htmlEscape(errorMessage);
             }
+            errorCode = oAuth2Exception.getOAuth2ErrorCode();
+            errorMessage = messageSource.getMessage(resourceKey, null, errorMessage, locale);
         }
-        // 账号状态异常
-        if (e instanceof AccountStatusException) {
-            errorMessage = messageSource.getMessage("SecurityExceptionUtil.accountStatus", null, locale);
-            if (e instanceof AccountExpiredException) {
-                errorMessage = messageSource.getMessage("SecurityExceptionUtil.accountExpired", null, locale);
-            }
-            if (e instanceof CredentialsExpiredException) {
-                errorMessage = messageSource.getMessage("SecurityExceptionUtil.credentialsExpired", null, locale);
-            }
-            if (e instanceof DisabledException) {
-                errorMessage = messageSource.getMessage("SecurityExceptionUtil.disabled", null, locale);
-            }
-            if (e instanceof LockedException) {
-                errorMessage = messageSource.getMessage("SecurityExceptionUtil.locked", null, locale);
-            }
+        if (rootCause instanceof AuthenticationException) {
+            String resourceKey = AuthenticationException.class.getSimpleName() + '.' + getSimpleNamePrefix(rootCause.getClass());
+            errorCode = "unauthorized";
+            errorMessage = messageSource.getMessage(resourceKey, null, errorMessage, locale);
         }
-        // 认证服务异常
-        if (e instanceof AuthenticationServiceException) {
-            if (e instanceof InternalAuthenticationServiceException) {
-                errorMessage = messageSource.getMessage("SecurityExceptionUtil.internalAuthenticationService", null, locale);
-            } else {
-                errorMessage = messageSource.getMessage("SecurityExceptionUtil.authenticationService", null, locale);
-            }
+        if (rootCause instanceof AccessDeniedException) {
+            errorCode = "forbidden";
+            errorMessage = messageSource.getMessage("AccessDeniedException.accessDenied", null, errorMessage, locale);
         }
-        // 记住我认证异常
-        if (e instanceof RememberMeAuthenticationException) {
-            if (e instanceof CookieTheftException) {
-                errorMessage = messageSource.getMessage("SecurityExceptionUtil.cookieTheft", null, locale);
-            } else if (e instanceof InvalidCookieException) {
-                errorMessage = messageSource.getMessage("SecurityExceptionUtil.invalidCookie", null, locale);
-            } else {
-                errorMessage = messageSource.getMessage("SecurityExceptionUtil.rememberMeAuthentication", null, locale);
-            }
-        }
-        if (e instanceof BadCredentialsException) {
-            errorMessage = messageSource.getMessage("SecurityExceptionUtil.badCredentials", null, locale);
-        }
-        if (e instanceof AuthenticationCredentialsNotFoundException) {
-            errorMessage = messageSource.getMessage("SecurityExceptionUtil.authenticationCredentialsNotFound", null, locale);
-        }
-        if (e instanceof NonceExpiredException) {
-            errorMessage = messageSource.getMessage("SecurityExceptionUtil.nonceExpired", null, locale);
-        }
-        if (e instanceof OAuth2AuthenticationException) {
-            OAuth2AuthenticationException oAuth2Ex = (OAuth2AuthenticationException) e;
-            errorMessage = oAuth2Ex.getError().getDescription();
-        }
-        if (e instanceof PreAuthenticatedCredentialsNotFoundException) {
-            errorMessage = messageSource.getMessage("SecurityExceptionUtil.preAuthenticatedCredentialsNotFound", null, locale);
-        }
-        if (e instanceof ProviderNotFoundException) {
-            errorMessage = messageSource.getMessage("SecurityExceptionUtil.providerNotFound", null, locale);
-        }
-        if (e instanceof SessionAuthenticationException) {
-            errorMessage = messageSource.getMessage("SecurityExceptionUtil.sessionAuthentication", null, locale);
-        }
-        if (e instanceof UsernameNotFoundException) {
-            errorMessage = messageSource.getMessage("SecurityExceptionUtil.usernameNotFound", null, locale);
-        }
-        return errorMessage;
+        return Response.fail(errorCode, errorMessage);
     }
 
-    public static String getMessage(AccessDeniedException e) {
-        Locale locale = LocaleUtil.resolveLocale();
-        return messageSource.getMessage("SecurityExceptionUtil.accessDenied", null, e.getMessage(), locale);
-    }
-
-    public static String getMessage(OAuth2Exception e) {
-        Locale locale = LocaleUtil.resolveLocale();
-        String resourceKey = OAuth2Exception.class.getSimpleName() + '.' + e.getOAuth2ErrorCode();
-        String errorMessage = e.getMessage();
-        if (errorMessage != null) {
-            errorMessage = HtmlUtils.htmlEscape(errorMessage);
-        }
-        return messageSource.getMessage(resourceKey, null, errorMessage, locale);
+    private static String getSimpleNamePrefix(Class<?> clazz) {
+        String simpleName = clazz.getSimpleName();
+        String simpleNamePrefix = simpleName.substring(0, simpleName.indexOf(Exception.class.getSimpleName()));
+        return StringUtils.uncapitalize(simpleNamePrefix);
     }
 }

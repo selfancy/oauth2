@@ -4,14 +4,17 @@ import com.example.oauth2.web.client.entity.Response;
 import com.example.oauth2.web.client.i18n.SecurityExceptionUtil;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
+import org.springframework.security.oauth2.provider.error.DefaultWebResponseExceptionTranslator;
 import org.springframework.security.oauth2.provider.error.WebResponseExceptionTranslator;
 
 /**
+ * 自定义权限认证异常处理
+ *
  * Created by mike on 2019-07-27
  */
 public class CustomWebResponseExceptionTranslator implements WebResponseExceptionTranslator<Response> {
 
-    private final WebResponseExceptionTranslator<OAuth2Exception> exceptionTranslator = new CustomOAuth2ExceptionWebResponseExceptionTranslator();
+    private final WebResponseExceptionTranslator<OAuth2Exception> exceptionTranslator = new DefaultWebResponseExceptionTranslator();
 
     @Override
     public ResponseEntity<Response> translate(Exception e) throws Exception {
@@ -21,9 +24,9 @@ public class CustomWebResponseExceptionTranslator implements WebResponseExceptio
 
     private ResponseEntity<Response> translateFromOAuth2Exception(ResponseEntity<OAuth2Exception> originResponse) {
         OAuth2Exception oAuth2Exception = originResponse.getBody();
-        String message = SecurityExceptionUtil.getMessage(oAuth2Exception);
+        Response<String> errorResponse = SecurityExceptionUtil.getErrorResponse(oAuth2Exception);
         return ResponseEntity.status(originResponse.getStatusCode())
                 .headers(originResponse.getHeaders())
-                .body(Response.fail(oAuth2Exception.getOAuth2ErrorCode(), message));
+                .body(errorResponse);
     }
 }
