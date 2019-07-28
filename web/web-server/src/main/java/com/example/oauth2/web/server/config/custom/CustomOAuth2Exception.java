@@ -1,4 +1,4 @@
-package com.example.oauth2.web.client.custom;
+package com.example.oauth2.web.server.config.custom;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;

@@ -27,6 +27,9 @@ public class WebfluxSecurityConfig {
     @Bean
     SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
         return http
+                .formLogin().disable()
+                .httpBasic().disable()
+                .cors().and()
                 .authorizeExchange()
                 .anyExchange().authenticated().and()
                 .oauth2ResourceServer().and()

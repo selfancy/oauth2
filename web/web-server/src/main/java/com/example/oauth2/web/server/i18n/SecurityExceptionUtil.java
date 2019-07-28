@@ -1,7 +1,7 @@
-package com.example.oauth2.web.client.i18n;
+package com.example.oauth2.web.server.i18n;
 
-import com.example.oauth2.web.client.config.LocaleUtil;
-import com.example.oauth2.web.client.entity.Response;
+import com.example.oauth2.web.server.entity.Response;
+import com.example.oauth2.web.server.util.LocaleUtil;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.context.MessageSource;
 import org.springframework.context.MessageSourceAware;
@@ -16,7 +16,7 @@ import java.util.Locale;
 
 /**
  * 异常处理
- *
+ * <p>
  * Created by mike on 2019-07-25
  */
 @Component

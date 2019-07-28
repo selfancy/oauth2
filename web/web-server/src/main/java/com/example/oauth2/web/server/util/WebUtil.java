@@ -1,4 +1,4 @@
-package com.example.oauth2.web.client.util;
+package com.example.oauth2.web.server.util;
 
 import javax.servlet.http.HttpServletRequest;
 

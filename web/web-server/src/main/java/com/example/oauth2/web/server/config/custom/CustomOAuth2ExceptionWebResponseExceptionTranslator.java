@@ -1,4 +1,4 @@
-package com.example.oauth2.web.client.custom;
+package com.example.oauth2.web.server.config.custom;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;

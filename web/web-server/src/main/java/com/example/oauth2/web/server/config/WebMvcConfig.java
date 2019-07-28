@@ -1,10 +1,11 @@
-package com.example.oauth2.web.client.config;
+package com.example.oauth2.web.server.config;
 
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.validation.Validator;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
+import org.springframework.web.context.request.RequestContextListener;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -55,4 +56,10 @@ public class WebMvcConfig implements WebMvcConfigurer {
         factoryBean.setValidationMessageSource(messageSource);
         return factoryBean;
     }
+
+    @Bean
+    public RequestContextListener requestContextListener(){
+        return new RequestContextListener();
+    }
+
 }

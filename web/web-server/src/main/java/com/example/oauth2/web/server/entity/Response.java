@@ -1,4 +1,4 @@
-package com.example.oauth2.web.client.entity;
+package com.example.oauth2.web.server.entity;
 
 /**
  * Created by mike on 2019-07-23

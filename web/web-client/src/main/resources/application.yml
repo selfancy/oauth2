@@ -4,3 +4,36 @@ server:
 logging:
   level:
     org.springframework.security: debug
+
+#spring:
+#  security:
+#    user:
+#      name: user
+#      password: 000
+
+# sso　认证配置
+#oauth2-server: http://www.server.com:8000
+#
+#
+#security:
+#  oauth2:
+#    client:
+#      # 在oauth 服务端注册的client-id
+#      client-id: client_1
+#      # 在oauth 服务端注册的secret
+#      client-secret: $2a$10$JknlOkbQANofGnc9BRkLv.Kuixt/pZleX2VC54udsy5Gqry7iSFzK
+#      # 获取token 地址
+#      access-token-uri: ${oauth2-server}/oauth/token
+#      # 认证地址
+#      user-authorization-uri: ${oauth2-server}/oauth/authorize
+#      scope: userinfo,resource
+#      authorized-grant-types: authorization_code,password,implicit,refresh_token,client_credentials
+#    resource:
+#      # 检查token
+#      token-info-uri: ${oauth2-server}/oauth/check_token
+#      # 用户信息
+#      user-info-uri: ${oauth2-server}/oauth/me
+#      jwt:
+#        key-uri: ${oauth2-server}/oauth/token_key
+#    sso:
+#      login-path: /login
