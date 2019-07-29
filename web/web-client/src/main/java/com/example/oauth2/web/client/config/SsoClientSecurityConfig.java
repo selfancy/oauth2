@@ -17,6 +17,11 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 public class SsoClientSecurityConfig {
 
     @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
     public UserDetailsService userDetailsService(PasswordEncoder passwordEncoder) {
         UserDetails userDetails = User.withUsername("user")
                 .password(passwordEncoder.encode("000"))
