@@ -1,4 +1,4 @@
-package com.example.oauth2.web.server.util;
+package com.example.oauth2.web.server.i18n;
 
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.i18n.LocaleContextHolder;

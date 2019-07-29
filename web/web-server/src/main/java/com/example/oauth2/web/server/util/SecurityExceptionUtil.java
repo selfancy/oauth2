@@ -1,7 +1,7 @@
-package com.example.oauth2.web.server.i18n;
+package com.example.oauth2.web.server.util;
 
 import com.example.oauth2.web.server.entity.Response;
-import com.example.oauth2.web.server.util.LocaleUtil;
+import com.example.oauth2.web.server.i18n.LocaleUtil;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.context.MessageSource;
 import org.springframework.context.MessageSourceAware;

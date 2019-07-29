@@ -1,7 +1,7 @@
 package com.example.oauth2.web.server.config.custom;
 
 import com.example.oauth2.web.server.entity.Response;
-import com.example.oauth2.web.server.i18n.SecurityExceptionUtil;
+import com.example.oauth2.web.server.util.SecurityExceptionUtil;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
 import org.springframework.security.oauth2.provider.error.DefaultWebResponseExceptionTranslator;

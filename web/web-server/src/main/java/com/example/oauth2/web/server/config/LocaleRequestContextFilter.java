@@ -1,6 +1,6 @@
 package com.example.oauth2.web.server.config;
 
-import com.example.oauth2.web.server.util.LocaleUtil;
+import com.example.oauth2.web.server.i18n.LocaleUtil;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;

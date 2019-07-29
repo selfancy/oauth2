@@ -1,7 +1,7 @@
 package com.example.oauth2.web.server.config.custom;
 
 import com.example.oauth2.web.server.entity.Response;
-import com.example.oauth2.web.server.i18n.SecurityExceptionUtil;
+import com.example.oauth2.web.server.util.SecurityExceptionUtil;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
