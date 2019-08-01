@@ -1,0 +1,34 @@
+server:
+  port: 9020
+
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          reactive-client:
+            client-id: reactive_client
+            client-secret: $2a$10$JknlOkbQANofGnc9BRkLv.Kuixt/pZleX2VC54udsy5Gqry7iSFzK
+            client-name: Custom Resource Client
+            scope: userinfo,resource
+            provider: custom-provider
+            authorization-grant-type: authorization_code
+            client-authentication-method: basic
+            redirect-uri-template: '{baseUrl}/login/oauth2/code/{registrationId}'
+            user-name-attribute: name
+          github:
+            client-id: 7f516f058038fbab149d
+            client-secret: 7bbe2d4fd83f6cb01b0691be067780513a1bc76b
+            scope: read:user,repo
+        provider:
+          custom-provider:
+            token-uri: http://www.authorization.com:8000/oauth/token
+            authorization-uri: http://www.authorization.com:8000/oauth/authorize
+            user-info-uri: http://www.authorization.com:8000/userinfo
+            user-name-attribute: name
+            # /oauth/authorize
+            # /oauth2/authorization/{registrationId}
+
+logging:
+  level:
+    org.springframework.security: debug

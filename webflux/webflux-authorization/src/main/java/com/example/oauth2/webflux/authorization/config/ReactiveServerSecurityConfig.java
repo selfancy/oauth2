@@ -1,4 +1,4 @@
-package com.example.oauth2.webflux.server.config;
+package com.example.oauth2.webflux.authorization.config;
 
 import org.springframework.boot.actuate.autoconfigure.security.reactive.EndpointRequest;
 import org.springframework.context.annotation.Bean;

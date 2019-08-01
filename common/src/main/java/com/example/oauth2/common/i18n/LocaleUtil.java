@@ -1,8 +1,6 @@
 package com.example.oauth2.common.i18n;
 
-import org.springframework.context.annotation.Lazy;
 import org.springframework.context.i18n.LocaleContextHolder;
-import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -18,15 +16,14 @@ import java.util.Locale;
 /**
  * Created by mike on 2019-07-26
  */
-@Component
 public class LocaleUtil {
 
     private static LocaleChangeInterceptor localeChangeInterceptor;
 
     private static LocaleResolver localeResolver;
 
-    public LocaleUtil(@Lazy LocaleChangeInterceptor localeChangeInterceptor,
-                      @Lazy LocaleResolver localeResolver) {
+    public LocaleUtil(LocaleChangeInterceptor localeChangeInterceptor,
+                      LocaleResolver localeResolver) {
         LocaleUtil.localeChangeInterceptor = localeChangeInterceptor;
         LocaleUtil.localeResolver = localeResolver;
     }

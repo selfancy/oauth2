@@ -12,8 +12,8 @@ security:
         client-secret: $2a$10$JknlOkbQANofGnc9BRkLv.Kuixt/pZleX2VC54udsy5Gqry7iSFzK
         grant-type: authorization_code
       resource:
-        user-info-uri: http://www.server.com:8000/userinfo
-        token-info-uri: http://www.server.com:8000/oauth/check_token
+        user-info-uri: http://www.authorization.com:8000/userinfo
+        token-info-uri: http://www.authorization.com:8000/oauth/check_token
 
 logging:
   level:

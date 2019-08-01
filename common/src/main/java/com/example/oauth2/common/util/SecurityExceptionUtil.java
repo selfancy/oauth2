@@ -8,7 +8,6 @@ import org.springframework.context.MessageSourceAware;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
-import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.util.HtmlUtils;
 
@@ -19,7 +18,6 @@ import java.util.Locale;
  * <p>
  * Created by mike on 2019-07-25
  */
-@Component
 public class SecurityExceptionUtil implements MessageSourceAware {
 
     private static MessageSource messageSource;

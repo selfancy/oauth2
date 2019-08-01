@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: webflux-resource-server
+
+server:
+  port: 9020
+
+logging:
+  level:
+    org.springframework.security: debug

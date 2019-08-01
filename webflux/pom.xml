@@ -16,12 +16,25 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-webflux</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>com.example</groupId>
+            <artifactId>common</artifactId>
+            <version>${project.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>javax.servlet</groupId>
+                    <artifactId>javax.servlet-api</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
     </dependencies>
 
     <modules>
         <module>webflux-gateway</module>
         <module>webflux-client</module>
-        <module>webflux-server</module>
+        <module>webflux-authorization</module>
+        <module>webflux-resource</module>
     </modules>
 
 </project>

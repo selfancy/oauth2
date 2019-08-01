@@ -1,4 +1,4 @@
-package com.example.oauth2.webflux.server.controller;
+package com.example.oauth2.webflux.authorization.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;

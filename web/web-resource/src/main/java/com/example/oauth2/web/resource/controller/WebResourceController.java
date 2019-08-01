@@ -1,7 +1,7 @@
 package com.example.oauth2.web.resource.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
@@ -14,21 +14,21 @@ import java.util.Date;
 @RestController
 public class WebResourceController {
 
-    @RequestMapping("/common")
+    @GetMapping("/common")
     public String common() {
         return "<center>" +
                 "<h1>Common Resource!</h1>" +
                 "</center>";
     }
 
-    @RequestMapping("/resource")
+    @GetMapping("/resource")
     public String resource() {
         return "<center>" +
                 "<h1>Secured Web Resource!</h1>" +
                 "</center>";
     }
 
-    @RequestMapping("/api")
+    @GetMapping("/api")
     public JSONObject api(HttpServletRequest request) {
         JSONObject json = new JSONObject();
         json.put("time", new Date());
@@ -36,7 +36,7 @@ public class WebResourceController {
         return json;
     }
 
-    @RequestMapping("/userinfo")
+    @GetMapping("/userinfo")
     public Principal userinfo(Principal principal) {
         return principal;
     }

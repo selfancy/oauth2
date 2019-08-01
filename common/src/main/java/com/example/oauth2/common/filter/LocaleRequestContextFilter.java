@@ -2,7 +2,6 @@ package com.example.oauth2.common.filter;
 
 import com.example.oauth2.common.i18n.LocaleUtil;
 import org.springframework.context.i18n.LocaleContextHolder;
-import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -13,7 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@Component
 public class LocaleRequestContextFilter extends OncePerRequestFilter {
 
     @Override
