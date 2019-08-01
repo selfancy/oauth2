@@ -20,7 +20,9 @@ import java.util.Map;
  * Created by mike on 2019/7/15
  */
 @RestController
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = {
+        "com.example.oauth2.webflux.gateway",
+        "com.example.oauth2.common"})
 public class WebfluxGatewayApplication {
 
     public static void main(String[] args) {

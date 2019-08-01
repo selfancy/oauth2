@@ -6,7 +6,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 /**
  * Created by mike on 2019/7/15
  */
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = {
+        "com.example.oauth2.webflux.client",
+        "com.example.oauth2.common"})
 public class WebFluxClientApplication {
 
     public static void main(String[] args) {

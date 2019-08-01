@@ -1,6 +1,6 @@
 //package com.example.oauth2.web.client.sso;
 //
-//import com.example.oauth2.web.server.config.custom.CustomWebResponseExceptionTranslator;
+//import com.example.oauth2.web.resource.config.custom.CustomWebResponseExceptionTranslator;
 //import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.beans.factory.annotation.Qualifier;
 //import org.springframework.beans.factory.annotation.Value;
@@ -47,7 +47,7 @@
 //        @Autowired
 //        private SimpleCORSFilter simpleCORSFilter;
 //
-//        @Value("${oauth2-server}")
+//        @Value("${oauth2-authorization}")
 //        private String oauthServerUrl;
 //
 //        @Override

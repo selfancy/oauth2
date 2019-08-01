@@ -19,8 +19,9 @@
     </dependencies>
 
     <modules>
-        <module>web-server</module>
+        <module>web-authorization</module>
         <module>web-client</module>
+        <module>web-resource</module>
     </modules>
 
 </project>

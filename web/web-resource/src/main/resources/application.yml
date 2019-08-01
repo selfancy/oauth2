@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: web-resource-server
+
+server:
+  port: 8020
+
+security:
+  oauth2:
+      client:
+        client-id: web-client
+        client-secret: $2a$10$JknlOkbQANofGnc9BRkLv.Kuixt/pZleX2VC54udsy5Gqry7iSFzK
+        grant-type: authorization_code
+      resource:
+        user-info-uri: http://www.server.com:8000/userinfo
+        token-info-uri: http://www.server.com:8000/oauth/check_token
+
+logging:
+  level:
+    org.springframework.security: debug

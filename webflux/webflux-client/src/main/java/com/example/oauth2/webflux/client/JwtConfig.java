@@ -23,7 +23,7 @@ import java.time.Duration;
 /**
  * Created by mike on 2019-07-20
  */
-@Configuration
+//@Configuration
 public class JwtConfig {
 
     @Bean

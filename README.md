@@ -66,3 +66,16 @@
 #### 异常处理类
 - AccessDeniedHandler
 - AuthenticationEntryPoint
+
+#### jwt key生成
+- 生成JKS文件
+``
+keytool -genkeypair -alias mytest -keyalg RSA -keypass mypass -keystore mytest.jks -storepass mypass
+``
+- 导出公钥
+``
+keytool -list -rfc --keystore mytest.jks | openssl x509 -inform pem -pubkey
+``
+
+#### 参考资料
+[官方schema.sql](https://github.com/spring-projects/spring-security-oauth/blob/master/spring-security-oauth2/src/test/resources/schema.sql)
