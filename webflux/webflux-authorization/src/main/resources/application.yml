@@ -7,9 +7,9 @@ spring:
       client:
         registration:
           reactive-client:
-            client-id: reactive_client
+            client-id: reactive-client
             client-secret: $2a$10$JknlOkbQANofGnc9BRkLv.Kuixt/pZleX2VC54udsy5Gqry7iSFzK
-            client-name: Custom Resource Client
+            client-name: Custom Reactive Client
             scope: userinfo,resource
             provider: custom-provider
             authorization-grant-type: authorization_code
@@ -22,9 +22,9 @@ spring:
             scope: read:user,repo
         provider:
           custom-provider:
-            token-uri: http://www.authorization.com:8000/oauth/token
-            authorization-uri: http://www.authorization.com:8000/oauth/authorize
-            user-info-uri: http://www.authorization.com:8000/userinfo
+            token-uri: http://www.server.com:8000/oauth/token
+            authorization-uri: http://www.server.com:8000/oauth/authorize
+            user-info-uri: http://www.server.com:8000/userinfo
             user-name-attribute: name
             # /oauth/authorize
             # /oauth2/authorization/{registrationId}

@@ -10,12 +10,12 @@
     </parent>
     <artifactId>oauth2-server</artifactId>
 
-<!--    <dependencies>-->
-<!--        <dependency>-->
-<!--            <groupId>org.springframework.security</groupId>-->
-<!--            <artifactId>spring-security-oauth2-jose</artifactId>-->
-<!--        </dependency>-->
-<!--    </dependencies>-->
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-oauth2-jose</artifactId>
+        </dependency>
+    </dependencies>
 
     <build>
         <plugins>

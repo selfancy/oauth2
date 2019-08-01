@@ -1,6 +1,8 @@
 package com.example.oauth2.web.authorization.config;
 
 import com.example.oauth2.web.authorization.custom.CustomOAuth2ExceptionWebResponseExceptionTranslator;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -18,6 +20,9 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.A
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
+import org.springframework.security.oauth2.provider.token.AccessTokenConverter;
+import org.springframework.security.oauth2.provider.token.AuthorizationServerTokenServices;
+import org.springframework.security.oauth2.provider.token.TokenEnhancer;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
@@ -29,11 +34,6 @@ public class WebAuthorizationServerSecurityConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
-    }
-
-    @Bean
-    public TokenStore tokenStore() {
-        return new InMemoryTokenStore();
     }
 
     @Bean
@@ -58,13 +58,18 @@ public class WebAuthorizationServerSecurityConfig {
 
         private final TokenStore tokenStore;
 
+        private final AccessTokenConverter accessTokenConverter;
+
         public CustomAuthorizationServer(PasswordEncoder encoder,
                                          AuthenticationManager authenticationManager,
-                                         UserDetailsService userDetailsService, TokenStore tokenStore) {
+                                         UserDetailsService userDetailsService,
+                                         TokenStore tokenStore,
+                                         AccessTokenConverter accessTokenConverter) {
             this.encoder = encoder;
             this.authenticationManager = authenticationManager;
             this.userDetailsService = userDetailsService;
             this.tokenStore = tokenStore;
+            this.accessTokenConverter = accessTokenConverter;
         }
 
         @Override
@@ -78,6 +83,7 @@ public class WebAuthorizationServerSecurityConfig {
         public void configure(AuthorizationServerEndpointsConfigurer endpoints) {
             endpoints
                     .tokenStore(tokenStore)
+                    .accessTokenConverter(accessTokenConverter)
                     .authenticationManager(authenticationManager)
                     // password模式支持
                     .userDetailsService(userDetailsService)
@@ -113,6 +119,7 @@ public class WebAuthorizationServerSecurityConfig {
                             "https://www.taobao.com",
                             "https://www.jd.com");
         }
+
     }
 
     @EnableWebSecurity
@@ -128,8 +135,14 @@ public class WebAuthorizationServerSecurityConfig {
         protected void configure(HttpSecurity http) throws Exception {
             http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                     .and()
+                    .requestMatchers()
+                    .mvcMatchers("/.well-known/jwks.json")
+                    .antMatchers("/login", "/oauth/authorize", "/oauth/token")
+                    .antMatchers("/**")
+                    .and()
                     .authorizeRequests()
-                    .anyRequest().authenticated()
+                    .mvcMatchers("/.well-known/jwks.json").permitAll()
+                    .anyRequest().fullyAuthenticated()
                     .and()
                     .formLogin()
                     .and()

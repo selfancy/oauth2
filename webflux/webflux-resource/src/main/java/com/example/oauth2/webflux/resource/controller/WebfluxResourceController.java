@@ -1,7 +1,7 @@
 package com.example.oauth2.webflux.resource.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import org.springframework.http.server.ServerHttpRequest;
+import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
