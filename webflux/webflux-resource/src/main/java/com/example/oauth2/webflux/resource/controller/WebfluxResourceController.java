@@ -1,11 +1,11 @@
 package com.example.oauth2.webflux.resource.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
-import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
 import java.util.Date;
 
@@ -24,20 +24,16 @@ public class WebfluxResourceController {
 
     @GetMapping("/resource")
     public Mono<String> resource() {
-        return Mono.just("<center>" +<dependency>
-                <groupId>com.example</groupId>
-                <artifactId>common</artifactId>
-                <version>${project.version}</version>
-            </dependency>
+        return Mono.just("<center>" +
                 "<h1>Secured Web Resource!</h1>" +
                 "</center>");
     }
 
     @GetMapping("/api")
-    public Mono<JSONObject> api(HttpServletRequest request) {
+    public Mono<JSONObject> api(ServerHttpRequest request) {
         JSONObject json = new JSONObject();
         json.put("time", new Date());
-        json.put("ip", request.getRemoteAddr());
+        json.put("ip", request.getRemoteAddress());
         return Mono.just(json);
     }
 
