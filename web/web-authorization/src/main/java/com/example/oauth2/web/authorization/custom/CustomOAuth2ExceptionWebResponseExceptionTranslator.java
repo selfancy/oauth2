@@ -6,6 +6,8 @@ import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
 import org.springframework.security.oauth2.provider.error.DefaultWebResponseExceptionTranslator;
 
 /**
+ * 包装 OAuth2Exception
+ *
  * Created by mike on 2019-07-25
  */
 public class CustomOAuth2ExceptionWebResponseExceptionTranslator extends DefaultWebResponseExceptionTranslator {

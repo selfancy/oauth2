@@ -6,6 +6,8 @@ import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
 import java.util.Map;
 
 /**
+ * 包装 {@link OAuth2Exception}，使用 {@link CustomOAuth2ExceptionJackson2Serializer} 处理异常返回信息
+ *
  * Created by mike on 2019-07-23
  */
 @JsonSerialize(using = CustomOAuth2ExceptionJackson2Serializer.class)

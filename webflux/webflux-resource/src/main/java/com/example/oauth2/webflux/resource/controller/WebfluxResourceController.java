@@ -25,7 +25,7 @@ public class WebfluxResourceController {
     @GetMapping("/resource")
     public Mono<String> resource() {
         return Mono.just("<center>" +
-                "<h1>Secured Web Resource!</h1>" +
+                "<h1>Secured Resource Server Web Resource!</h1>" +
                 "</center>");
     }
 

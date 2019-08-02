@@ -1,6 +1,7 @@
 server:
   port: 9020
 
+
 spring:
   application:
     name: webflux-resource-server
@@ -9,6 +10,11 @@ spring:
       resourceserver:
         jwt:
           jwk-set-uri: http://www.server.com:8000/.well-known/jwks.json
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
 
 logging:
   level:

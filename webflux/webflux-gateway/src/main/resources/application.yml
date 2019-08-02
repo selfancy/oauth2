@@ -2,31 +2,30 @@ server:
   port: 9000
 
 spring:
-  security:
-    oauth2:
-      client:
-        registration:
-          client:
-            client-id: client_1
-            client-secret: $2a$10$JknlOkbQANofGnc9BRkLv.Kuixt/pZleX2VC54udsy5Gqry7iSFzK
-            client-name: Custom
-            scope: userinfo,resource
-            provider: custom-provider
-            authorization-grant-type: authorization_code
-            client-authentication-method: post
-            redirect-uri-template: "{baseUrl}/login/oauth2/code/{registrationId}"
-            user-name-attribute: name
-          github:
-            client-id: 7f516f058038fbab149d
-            client-secret: 7bbe2d4fd83f6cb01b0691be067780513a1bc76b
-            scope: read:user,repo
-        provider:
-          custom-provider:
-            token-uri: http://www.client.com:8010/oauth/token
-            authorization-uri: http://www.client.com:8010/oauth/authorize
-            user-info-uri: http://www.client.com:8010/userinfo
-            user-name-attribute: name
+  application:
+    name: webflux-gateway-resource-server
+  cloud:
+    gateway:
+      routes:
+        - id: webflux-resource-server
+          # lb://eureka 注册服务名
+          uri: lb://webflux-resource-server
+          predicates:
+            # 请求匹配路径
+            - Path=/mike/**
+          filters:
+            # 自定义请求预处理
+            - Pre=请求预处理,666
+            # 重写路径
+            - RewritePath=/mike/(?<segment>.*), /$\{segment}
+
+eureka:
+  client:
+    register-with-eureka: false
+    service-url:
+      defaultZone: http://localhost:8761/eureka
 
 logging:
   level:
-    org.springframework.security: debug
+    org.springframework.security: info
+    org.springframework.cloud.gateway: trace
