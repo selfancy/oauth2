@@ -78,4 +78,5 @@ keytool -list -rfc --keystore mytest.jks | openssl x509 -inform pem -pubkey
 ``
 
 #### 参考资料
+[spring-security官方尚未对webflux授权服务器支持](https://stackoverflow.com/questions/46798705/is-there-working-example-of-oauth2-with-webflux)
 [官方schema.sql](https://github.com/spring-projects/spring-security-oauth/blob/master/spring-security-oauth2/src/test/resources/schema.sql)
